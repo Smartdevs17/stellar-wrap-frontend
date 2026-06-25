@@ -8,7 +8,7 @@ import {
 import { CacheStore } from "@/app/utils/indexer";
 import {
   IndexingStep,
-  IndexingProgress,
+  IndexingError,
   INDEXING_STEPS,
   STEP_ORDER,
   PersistedIndexingState,
@@ -93,6 +93,7 @@ const initialIndexingState = {
   totalSteps: STEP_ORDER.length,
   startTime: null as number | null,
   estimatedTimeRemaining: null as number | null,
+  indexingError: null as IndexingError | null,
   isLoading: false,
   isCancelled: false,
   metrics: {
@@ -123,7 +124,7 @@ interface WrapStoreState {
   totalSteps: number;
   startTime: number | null;
   estimatedTimeRemaining: number | null;
-  indexingError: IndexingProgress["error"];
+  indexingError: IndexingError | null;
   isLoading: boolean;
   isCancelled: boolean;
   metrics: IndexingMetrics;
@@ -193,7 +194,6 @@ export const useWrapStore = create<WrapStoreState>()(
       contractAddresses: {},
       // Indexing initial state
       ...initialIndexingState,
-
       setAddress: (address) => set({ address }),
       setPeriod: (period) => set({ period }),
       setNetwork: (network) => set({ network, ...syncContractState(network) }),

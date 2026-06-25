@@ -644,6 +644,7 @@ export default function ConnectPage() {
                   </>
                 )}
               </motion.button>
+
               <motion.button
                 onClick={handleAlbedoConnect}
                 onKeyDown={handleAlbedoKeyDown}
