@@ -16,12 +16,20 @@ declare global {
 }
 
 /**
- * Checks if Freighter wallet extension is installed
+ * Checks if the Freighter browser extension is available.
  */
 export const isFreighterInstalled = async (): Promise<boolean> => {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  if ("freighter" in window && window.freighter) {
+    return true;
+  }
+
   try {
     const result = await isConnected();
-    return !result.error && result.isConnected;
+    return !result.error;
   } catch {
     return false;
   }
