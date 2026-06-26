@@ -8,7 +8,7 @@ import { GOLDEN_USER } from "@/src/data/mockData";
 import { ProgressIndicator } from "@/app/components/ProgressIndicator";
 import { MuteToggle } from "../components/MuteToggle";
 import { ShareCard } from "../components/ShareCard";
-import { ShareImageCard } from "../components/ShareImageCard";
+import { ShareImageCard, DownloadPngButton } from "../components/ShareImageCard";
 import { useTheme, themeColors } from "../context/ThemeContext";
 import { useWrapStore } from "../store/wrapStore";
 import {
@@ -55,6 +55,23 @@ export default function ShareCardPage() {
     return computedColor || themeColors[color].primary;
   });
 
+  const handleShareKeyDown = (platform: string) => (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleShare(platform);
+    }
+  };
+
+  const toggleShareKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setShareOpen(!shareOpen);
+    }
+    if (e.key === "Escape" && shareOpen) {
+      setShareOpen(false);
+    }
+  };
+
   // --- Share Functionality ---
   const handleShare = (platform: string) => {
     const url = window.location.href;
@@ -97,8 +114,17 @@ export default function ShareCardPage() {
         setShareOpen(false);
       }
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && shareOpen) {
+        setShareOpen(false);
+      }
+    };
     document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [shareOpen]);
 
   return (
@@ -164,7 +190,9 @@ export default function ShareCardPage() {
                 {/* X / Twitter */}
                 <button
                   onClick={() => handleShare("x")}
+                  onKeyDown={handleShareKeyDown("x")}
                   className="flex cursor-pointer items-center pl-4 w-42 h-15 gap-3 p-2 rounded-xl bg-[#0F0F10] hover:bg-[#1a1a1c] transition-colors group"
+                  role="menuitem"
                 >
                   <div className="h-10 w-10 flex items-center justify-center rounded-full bg-black border border-white/10">
                     <SocialIcons.X />
@@ -173,8 +201,10 @@ export default function ShareCardPage() {
                 </button>
 
                 <button
-                  onClick={() => handleShare("x")}
+                  onClick={() => handleShare("whatsapp")}
+                  onKeyDown={handleShareKeyDown("whatsapp")}
                   className="flex cursor-pointer items-center pl-4 w-42 h-15 gap-3 p-2 rounded-xl bg-[#0F0F10] hover:bg-[#1a1a1c] transition-colors group"
+                  role="menuitem"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366]">
                     <SocialIcons.WhatsApp />
@@ -186,7 +216,9 @@ export default function ShareCardPage() {
 
                 <button
                   onClick={() => handleShare("facebook")}
+                  onKeyDown={handleShareKeyDown("facebook")}
                   className="flex items-center cursor-pointer pl-4 gap-3 p-2 w-42 h-15 rounded-xl bg-[#0F0F10] hover:bg-[#1a1a1c] transition-colors"
+                  role="menuitem"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1877F2]">
                     <SocialIcons.Facebook />
@@ -198,7 +230,9 @@ export default function ShareCardPage() {
 
                 <button
                   onClick={() => handleShare("linkedin")}
+                  onKeyDown={handleShareKeyDown("linkedin")}
                   className="flex items-center pl-4 cursor-pointer gap-3 p-2 w-42 h-15 rounded-xl bg-[#0F0F10] hover:bg-[#1a1a1c] transition-colors"
+                  role="menuitem"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0077B5]">
                     <SocialIcons.LinkedIn />
@@ -210,7 +244,9 @@ export default function ShareCardPage() {
 
                 <button
                   onClick={() => handleShare("telegram")}
+                  onKeyDown={handleShareKeyDown("telegram")}
                   className="flex items-center cursor-pointer pl-4 gap-3 p-2 w-42 h-15 rounded-xl bg-[#0F0F10] hover:bg-[#1a1a1c] transition-colors"
+                  role="menuitem"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#229ED9]">
                     <SocialIcons.Telegram />
@@ -219,6 +255,10 @@ export default function ShareCardPage() {
                     Telegram
                   </span>
                 </button>
+
+                <div className="w-full border-t border-white/10 my-1" />
+
+                <DownloadPngButton cardRef={shareImageRef} address={walletAddress ?? undefined} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -226,7 +266,10 @@ export default function ShareCardPage() {
           <button
             ref={shareBtnRef}
             onClick={() => setShareOpen(!shareOpen)}
+            onKeyDown={toggleShareKeyDown}
             className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white backdrop-blur-md transition hover:bg-white/5"
+            aria-label="Share"
+            aria-expanded={shareOpen}
           >
             <motion.div
               animate={{ rotate: shareOpen ? 50 : 0 }}

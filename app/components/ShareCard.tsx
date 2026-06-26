@@ -341,6 +341,12 @@ export function ShareCard({
             whileTap={{ scale: isMinting || !!mintSuccess ? 1 : 0.98 }}
             className={`w-full group relative mt-8 ${mintFailed ? "animate-pulse" : ""}`}
             onClick={handleMint}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && !isMinting && !mintSuccess) {
+                e.preventDefault();
+                handleMint();
+              }
+            }}
             disabled={isMinting || !!mintSuccess}
           >
             <motion.div
@@ -417,6 +423,12 @@ export function ShareCard({
                 whileTap={{ scale: 0.98 }}
                 className="w-full group relative"
                 onClick={handleShareX}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleShareX();
+                  }
+                }}
               >
                 <motion.div
                   className="absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
@@ -442,6 +454,12 @@ export function ShareCard({
                 whileTap={{ scale: 0.98 }}
                 className="w-full group relative"
                 onClick={handleShareX}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleShareX();
+                  }
+                }}
               >
                 <motion.div
                   className="absolute -inset-1 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
@@ -470,6 +488,12 @@ export function ShareCard({
                 whileTap={{ scale: 0.98 }}
                 className="w-full group relative"
                 onClick={handleDownload}
+                onKeyDown={(e) => {
+                  if ((e.key === "Enter" || e.key === " ") && !isDownloading) {
+                    e.preventDefault();
+                    handleDownload();
+                  }
+                }}
                 disabled={isDownloading}
               >
                 <motion.div

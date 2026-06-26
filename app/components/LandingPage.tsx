@@ -8,7 +8,6 @@ import { ColorToggle } from './ColorToggle';
 import { NetworkToggle } from './NetworkToggle';
 import ParticleField from './ParticleField';
 import { useWrapStore, WrapPeriod } from '../store/wrapStore';
-import ParticleField from './ParticleField';
 
 export function LandingPage() {
   const router = useRouter();
@@ -414,9 +413,18 @@ export function LandingPage() {
               <motion.button
                 key={periodOption}
                 onClick={() => setSelectedPeriod(periodOption)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedPeriod(periodOption);
+                  }
+                }}
                 className="relative px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-lg md:rounded-xl font-black tracking-tight text-sm sm:text-base md:text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
+                role="radio"
+                aria-checked={selectedPeriod === periodOption}
+                aria-label={`${periodOption} period`}
               >
                 {selectedPeriod === periodOption && (
                   <motion.div
@@ -445,6 +453,12 @@ export function LandingPage() {
         >
           <motion.button
             onClick={handleStart}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleStart();
+              }
+            }}
             className="relative group w-full"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
