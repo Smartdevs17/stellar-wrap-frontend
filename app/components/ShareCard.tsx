@@ -8,6 +8,7 @@ import { useTransactionStore } from "@/app/store/transactionStore";
 import { toast } from "sonner";
 import { useSound } from "../hooks/useSound";
 import { SOUND_NAMES } from "../utils/soundManager";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 interface ShareCardProps {
   username: string;
   transactions: number;
@@ -28,6 +29,7 @@ export function ShareCard({
   const [isDownloading, setIsDownloading] = useState(false);
   const { address, network } = useWrapStore();
   const { playSound } = useSound();
+  const isOnline = useOnlineStatus();
   
   const { transactionState, transactionHash, transactionError, resetTransaction } = useTransactionStore();
 
@@ -87,6 +89,11 @@ export function ShareCard({
 
   const handleMint = async () => {
     console.log("Mint attempt - Address:", address);
+
+    if (!isOnline) {
+      toast.error("Minting is unavailable offline");
+      return;
+    }
 
     if (!address) {
       toast.error("Please connect your wallet first", {
@@ -148,7 +155,7 @@ export function ShareCard({
       case "failed":
         return "Retry Mint";
       default:
-        return "Mint My Wrap";
+        return isOnline ? "Mint My Wrap" : "Mint unavailable offline";
     }
   };
   return (
@@ -335,13 +342,15 @@ export function ShareCard({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 }}
             whileHover={{
-              scale: isMinting || !!mintSuccess ? 1 : 1.02,
+              scale: !isOnline || isMinting || !!mintSuccess ? 1 : 1.02,
               transition: { duration: 0.2 },
             }}
-            whileTap={{ scale: isMinting || !!mintSuccess ? 1 : 0.98 }}
+            whileTap={{
+              scale: !isOnline || isMinting || !!mintSuccess ? 1 : 0.98,
+            }}
             className={`w-full group relative mt-8 ${mintFailed ? "animate-pulse" : ""}`}
             onClick={handleMint}
-            disabled={isMinting || !!mintSuccess}
+            disabled={!isOnline || isMinting || !!mintSuccess}
           >
             <motion.div
               className={`absolute -inset-1 rounded-2xl blur-xl transition-opacity ${mintFailed ? "opacity-50" : "opacity-0 group-hover:opacity-100"}`}

@@ -52,6 +52,7 @@ export interface CacheMeta {
   fromCache: boolean;
   cacheTimestamp?: number;
   refreshingInBackground?: boolean;
+  offline?: boolean;
 }
 
 export type ContractAddressesByNetwork = Partial<Record<Network, string>>;
@@ -400,7 +401,14 @@ export const useWrapStore = create<WrapStoreState>()(
     }),
     {
       name: "stellar-wrap-store",
-      partialize: (state) => ({ network: state.network }),
+      partialize: (state) => ({
+        address: state.address,
+        period: state.period,
+        network: state.network,
+        result: state.result,
+        status: state.status,
+        cacheMeta: state.cacheMeta,
+      }),
       storage: createJSONStorage(() =>
         typeof window !== "undefined"
           ? localStorage
