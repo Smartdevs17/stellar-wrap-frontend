@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, RotateCcw, X, TrendingUp, Coins, FileText, Zap } from "lucide-react";
 import { useWrapStore } from "@/app/store/wrapStore";
 import { INDEXING_STEPS, STEP_ORDER, IndexingStep } from "@/app/types/indexing";
+import { StellarFunFacts } from "./StellarFunFacts";
 
 interface IndexingSkeletonProps {
   onRetry?: () => void;
@@ -348,6 +349,9 @@ export function IndexingSkeleton({
             })}
           </div>
         </div>
+
+        {/* Stellar fun facts */}
+        <StellarFunFacts isLoading={isLoading && !indexingError} />
 
         {/* Time Estimate */}
         {estimatedTimeRemaining && !indexingError && (
