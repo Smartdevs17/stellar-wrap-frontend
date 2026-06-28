@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ColorToggle } from './ColorToggle';
 import { NetworkToggle } from './NetworkToggle';
+import { CommunityWrapsCarousel } from './CommunityWrapsCarousel';
 import ParticleField from './ParticleField';
 import { LiveWrapCounter } from './LiveWrapCounter';
 import { useWrapStore, WrapPeriod } from '../store/wrapStore';
@@ -26,7 +27,7 @@ export function LandingPage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen h-screen overflow-hidden bg-theme-background">
+    <div className="relative w-full min-h-screen overflow-x-hidden overflow-y-auto bg-theme-background">
       {/* Particle field background */}
       <ParticleField />
 
@@ -242,8 +243,8 @@ export function LandingPage() {
         ))}
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-8 w-full max-w-full overflow-x-hidden">
+      {/* Main content — hero */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 w-full max-w-full">
         
         {/* Top HUD bar */}
         <motion.div
@@ -527,6 +528,9 @@ export function LandingPage() {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Community wraps carousel */}
+      <CommunityWrapsCarousel />
 
       {/* Corner brackets (HUD elements) */ }
       <motion.div
